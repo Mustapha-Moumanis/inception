@@ -1,0 +1,36 @@
+services:
+    nginx:
+        build: requirements/nginx
+        container_name: nginx
+        ports:
+            - 80:80
+            # - 443:443
+        environment:
+            DB_URL: mariadb://mariadb/db
+    # nginx:
+        # image: nginx:alpine
+        # container_name: nginx
+        # ssl_protocols: TLSv1.2
+    wordpress:
+        # image: nginx:latest
+        # image: wordpress:latest
+        build: requirements/wordpress
+        container_name: wordpress
+        ports:
+            - 8000:80
+        environment:
+            DB_URL: mariadb://mariadb/db
+    mariadb:
+        build: requirements/mariadb
+        container_name: mariadb
+        volumes:
+            - db:/var/lib/mysql
+        ports:
+            - 3306:80
+        # build: requirements/mariadb
+        # ports:
+        #     - 27017:80
+        # volumes:
+        #     - db:/data/mariadb
+volumes:
+    db:
