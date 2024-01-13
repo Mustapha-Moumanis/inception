@@ -1,20 +1,16 @@
 # FROM mariadb
 
-FROM debian:stable
+FROM debian:12
 
 RUN apt-get update && apt-get install -y mariadb-server
 
-EXPOSE 3306
+# EXPOSE 3306
 
-# LABEL version="1.0"
-# LABEL description="MariaDB Server"
+# CMD ["tail", "-F", "/dev/null"]
+ENV MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
+ENV MYSQL_DATABASE={$MYSQL_DATABASE}
+ENV MYSQL_USER={$MYSQL_USER}
+ENV MYSQL_PASSWORD={$MYSQL_PASSWORD}
 
-# HEALTHCHECK --start-period=5m \
-#   CMD mariadb -e 'SELECT @@datadir;' || exit 1
-
-ENV MYSQL_ROOT_PASSWORD=password
-ENV MYSQL_DATABASE=mydatabase
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=password
-
-CMD ["mariadbd"]
+# RUN mysql_secure_installation -u root
+CMD ["mysqld_safe"]

@@ -1,36 +1,72 @@
+volumes:
+    DB:
+    wordpress:
+        name: wordpress
+
+networks:
+  network:
+    name: network
+    # driver: bridge
+
 services:
+    wordpress:
+        container_name: wordpress
+        build: requirements/wordpress
+        env_file: .env
+        networks:
+            - network
+        environment:
+            - .env
+        #     - WORDPRESS_DB_HOST=mariadb:3306
+        #     - WORDPRESS_DB_NAME='${MYSQL_DATABASE}'
+        #     - WORDPRESS_DB_USER='${MYSQL_USER}'
+        #     - WORDPRESS_DB_PASSWORD='${MYSQL_PASSWORD}'
+        volumes:
+            - wordpress:/var/www/html
+
+    # mariadb:
+    #     # mem_limit: 2048m
+    #     # image: mariadb
+    #     build: requirements/mariadb
+    #     container_name: mariadb
+    #     ports:
+    #         - 3306:3306
+    #     networks:
+    #         - network
+    #     env_file: .env
+    #     # user: "mysql"
+    #     # environment:
+    #     #     - MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}'
+    #     #     - MYSQL_DATABASE='${MYSQL_DATABASE}'
+    #     #     - MYSQL_USER='${MYSQL_USER}'
+    #     #     - MYSQL_PASSWORD='${MYSQL_PASSWORD}'
+    #     volumes:
+    #         - DB:/var/lib/mysql
+    mariadb:
+        container_name: mariadb
+        build: requirements/mariadb
+        # restart: unless-stopped
+        ports:
+            - 3306:3306
+        networks:
+            - network
+        env_file: .env
+        # environment:
+        #     - MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}'
+        #     - MYSQL_DATABASE='${MYSQL_DATABASE}'
+        #     - MYSQL_USER='${MYSQL_USER}'
+        #     - MYSQL_PASSWORD='${MYSQL_PASSWORD}'
+        volumes:
+            - DB:/var/lib/mysql
     nginx:
-        build: requirements/nginx
         container_name: nginx
+        build: requirements/nginx
         ports:
             - 80:80
-            # - 443:443
-        environment:
-            DB_URL: mariadb://mariadb/db
-    # nginx:
-        # image: nginx:alpine
-        # container_name: nginx
-        # ssl_protocols: TLSv1.2
-    wordpress:
-        # image: nginx:latest
-        # image: wordpress:latest
-        build: requirements/wordpress
-        container_name: wordpress
-        ports:
-            - 8000:80
-        environment:
-            DB_URL: mariadb://mariadb/db
-    mariadb:
-        build: requirements/mariadb
-        container_name: mariadb
+            - 443:443
+        networks:
+            - network
         volumes:
-            - db:/var/lib/mysql
-        ports:
-            - 3306:80
-        # build: requirements/mariadb
-        # ports:
-        #     - 27017:80
-        # volumes:
-        #     - db:/data/mariadb
-volumes:
-    db:
+            - wordpress:/var/www/html
+        environment:
+            DB_URL: mariadb://mariadb/db
