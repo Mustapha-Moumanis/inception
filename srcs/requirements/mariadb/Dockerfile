@@ -2,15 +2,18 @@
 
 FROM debian:12
 
-RUN apt-get update && apt-get install -y mariadb-server
+RUN apt-get update && apt-get install mariadb-server -y
 
-# EXPOSE 3306
+COPY tools/script.sh .
+# RUN chmod +x ./script.sh
+# COPY conf/my.cnf /etc/mysql/my.cnf
+
+EXPOSE 3306
 
 # CMD ["tail", "-F", "/dev/null"]
-ENV MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
-ENV MYSQL_DATABASE={$MYSQL_DATABASE}
-ENV MYSQL_USER={$MYSQL_USER}
-ENV MYSQL_PASSWORD={$MYSQL_PASSWORD}
+# ENV MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
+# ENV MYSQL_DATABASE={$MYSQL_DATABASE}
+# ENV MYSQL_USER={$MYSQL_USER}
+# ENV MYSQL_PASSWORD={$MYSQL_PASSWORD}
 
-# RUN mysql_secure_installation -u root
-CMD ["mysqld_safe"]
+CMD ["bash", "script.sh"]

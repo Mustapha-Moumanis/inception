@@ -1,5 +1,12 @@
+version: '3.8'
 volumes:
     DB:
+        name: database
+        # driver: local
+        # driver_opts:
+        #     type: none
+        #     o: bind
+        #     device: /Users/mmoumani/Desktop/data/database
     wordpress:
         name: wordpress
 
@@ -9,64 +16,55 @@ networks:
     # driver: bridge
 
 services:
-    wordpress:
-        container_name: wordpress
-        build: requirements/wordpress
-        env_file: .env
-        networks:
-            - network
-        environment:
-            - .env
-        #     - WORDPRESS_DB_HOST=mariadb:3306
-        #     - WORDPRESS_DB_NAME='${MYSQL_DATABASE}'
-        #     - WORDPRESS_DB_USER='${MYSQL_USER}'
-        #     - WORDPRESS_DB_PASSWORD='${MYSQL_PASSWORD}'
-        volumes:
-            - wordpress:/var/www/html
-
-    # mariadb:
-    #     # mem_limit: 2048m
-    #     # image: mariadb
-    #     build: requirements/mariadb
-    #     container_name: mariadb
-    #     ports:
-    #         - 3306:3306
-    #     networks:
-    #         - network
-    #     env_file: .env
-    #     # user: "mysql"
-    #     # environment:
-    #     #     - MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}'
-    #     #     - MYSQL_DATABASE='${MYSQL_DATABASE}'
-    #     #     - MYSQL_USER='${MYSQL_USER}'
-    #     #     - MYSQL_PASSWORD='${MYSQL_PASSWORD}'
-    #     volumes:
-    #         - DB:/var/lib/mysql
     mariadb:
         container_name: mariadb
         build: requirements/mariadb
         # restart: unless-stopped
         ports:
             - 3306:3306
-        networks:
-            - network
-        env_file: .env
+        env_file:
+            - .env
         # environment:
-        #     - MYSQL_ROOT_PASSWORD='${MYSQL_ROOT_PASSWORD}'
-        #     - MYSQL_DATABASE='${MYSQL_DATABASE}'
-        #     - MYSQL_USER='${MYSQL_USER}'
-        #     - MYSQL_PASSWORD='${MYSQL_PASSWORD}'
+        #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        #     - MYSQL_DATABASE=${MYSQL_DATABASE}
+        #     - MYSQL_USER=${MYSQL_USER}
+        #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         volumes:
             - DB:/var/lib/mysql
+        networks:
+            - network
+
+    wordpress:
+        depends_on:
+            - mariadb
+        container_name: wordpress
+        build: requirements/wordpress
+        env_file:
+            - .env
+        # environment:
+        #     # - .env
+        #     - WORDPRESS_DB_HOST=mariadb:3306
+        #     - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+        #     - WORDPRESS_DB_USER=${MYSQL_USER}
+        #     - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
+        volumes:
+            - wordpress:/var/www/html
+        networks:
+            - network
+    
     nginx:
+        depends_on :
+            - wordpress
         container_name: nginx
         build: requirements/nginx
         ports:
             - 80:80
             - 443:443
-        networks:
-            - network
+        env_file:
+            - .env
         volumes:
             - wordpress:/var/www/html
-        environment:
-            DB_URL: mariadb://mariadb/db
+        networks:
+            - network
+        # environment:
+        #     DB_URL: mariadb://mariadb/db
