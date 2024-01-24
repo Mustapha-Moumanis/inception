@@ -4,7 +4,6 @@ services:
     mariadb:
         container_name: mariadb
         build: requirements/mariadb
-        # restart: unless-stopped
         restart: on-failure
         ports:
             - 3306:3306
@@ -59,4 +58,4 @@ volumes:
 networks:
   network:
     name: network
-    # driver: bridge # The default network                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          /.
+    # driver: bridge # The default network
