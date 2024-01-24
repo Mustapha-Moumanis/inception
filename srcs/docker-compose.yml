@@ -1,4 +1,50 @@
 version: '3.8'
+
+services:
+    mariadb:
+        container_name: mariadb
+        build: requirements/mariadb
+        # restart: unless-stopped
+        restart: on-failure
+        ports:
+            - 3306:3306
+        env_file:
+            - .env
+        volumes:
+            - DB:/var/lib/mysql
+        networks:
+            - network
+
+    wordpress:
+        depends_on:
+            - mariadb
+        container_name: wordpress
+        build: requirements/wordpress
+        restart: on-failure
+        ports:
+            - 9000:9000
+        env_file:
+            - .env
+        volumes:
+            - wordpress:/var/www/html
+        networks:
+            - network
+    
+    nginx:
+        depends_on :
+            - wordpress
+        container_name: nginx
+        build: requirements/nginx
+        restart: on-failure
+        ports:
+            - 443:443
+        env_file:
+            - .env
+        volumes:
+            - wordpress:/var/www/html
+        networks:
+            - network
+
 volumes:
     DB:
         name: database
@@ -13,58 +59,4 @@ volumes:
 networks:
   network:
     name: network
-    # driver: bridge
-
-services:
-    mariadb:
-        container_name: mariadb
-        build: requirements/mariadb
-        # restart: unless-stopped
-        ports:
-            - 3306:3306
-        env_file:
-            - .env
-        # environment:
-        #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-        #     - MYSQL_DATABASE=${MYSQL_DATABASE}
-        #     - MYSQL_USER=${MYSQL_USER}
-        #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        volumes:
-            - DB:/var/lib/mysql
-        networks:
-            - network
-
-    wordpress:
-        depends_on:
-            - mariadb
-        container_name: wordpress
-        build: requirements/wordpress
-        env_file:
-            - .env
-        # environment:
-        #     # - .env
-        #     - WORDPRESS_DB_HOST=mariadb:3306
-        #     - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
-        #     - WORDPRESS_DB_USER=${MYSQL_USER}
-        #     - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
-        volumes:
-            - wordpress:/var/www/html
-        networks:
-            - network
-    
-    nginx:
-        depends_on :
-            - wordpress
-        container_name: nginx
-        build: requirements/nginx
-        ports:
-            - 80:80
-            - 443:443
-        env_file:
-            - .env
-        volumes:
-            - wordpress:/var/www/html
-        networks:
-            - network
-        # environment:
-        #     DB_URL: mariadb://mariadb/db
+    # driver: bridge # The default network                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          /.
