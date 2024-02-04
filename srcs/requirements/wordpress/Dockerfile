@@ -14,6 +14,5 @@ COPY tools/script.sh .
 
 RUN echo "listen = wordpress:9000" >> /etc/php/8.2/fpm/php-fpm.conf
 
-# CMD ["php-fpm8.2", "-F"]
 CMD ["bash", "script.sh"]
 
