@@ -44,13 +44,18 @@ services:
 volumes:
     DB:
         name: database
-        # driver: local
-        # driver_opts:
-        #     type: none
-        #     o: bind
-        #     device: /Users/mmoumani/Desktop/data/database
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: /home/mmoumani/Desktop/data/db/
     wordpress:
         name: wordpress
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: /home/mmoumani/Desktop/data/wordpress/
 
 networks:
   inception-network:
