@@ -1,4 +1,4 @@
-FROM debian:12
+FROM debian:stable
 
 WORKDIR /var/www/html
 
