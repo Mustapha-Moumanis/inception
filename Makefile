@@ -7,12 +7,10 @@ build:
 down:
 	cd srcs; docker-compose down
 
-# clean:
-# 	cd srcs; docker-compose down;
-#  docker volume prune -f
-# docker image rm -f $$(docker images -aq)
-
 fclean: down
-	cd srcs; docker image rm $$(docker image ls -q);
+	docker image rm $$(docker image ls -q);
+
+rm: fclean
+	docker volume rm -f $$(docker volume ls -q);
 
 re: down up

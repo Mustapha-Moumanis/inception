@@ -48,14 +48,14 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /home/mmoumani/Desktop/data/db/
+            device: /home/mmoumani/data/db/
     wordpress:
         name: wordpress
         driver: local
         driver_opts:
             type: none
             o: bind
-            device: /home/mmoumani/Desktop/data/wordpress/
+            device: /home/mmoumani/data/wordpress/
 
 networks:
   inception-network:
