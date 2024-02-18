@@ -2,7 +2,9 @@ FROM debian:stable
 
 WORKDIR /var/www/html
 
-RUN apt-get -y update && apt-get -y install php-fpm php8.2-mysqli wget mariadb-client
+RUN apt-get -y update
+
+RUN apt-get -y install php-fpm php8.2-mysqli wget mariadb-client
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
@@ -17,4 +19,3 @@ COPY tools/script.sh .
 RUN echo "listen = wordpress:9000" >> /etc/php/8.2/fpm/php-fpm.conf
 
 CMD ["bash", "script.sh"]
-

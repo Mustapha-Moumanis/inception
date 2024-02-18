@@ -1,6 +1,8 @@
 FROM debian:stable
 
-RUN apt-get -y update && apt-get -y install nginx openssl
+RUN apt-get -y update
+
+RUN apt-get -y install nginx openssl
 
 RUN mkdir /etc/nginx/ssl/
 

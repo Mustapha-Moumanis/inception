@@ -1,6 +1,8 @@
 FROM debian:stable
 
-RUN apt-get update && apt-get install mariadb-server -y
+RUN apt-get -y update
+
+RUN apt-get -y install mariadb-server 
 
 COPY tools/script.sh .
 
