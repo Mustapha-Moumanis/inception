@@ -18,6 +18,8 @@ COPY tools/script.sh .
 
 RUN mkdir /run/php/
 
+EXPOSE 9000
+
 RUN echo "listen = wordpress:9000" >> /etc/php/7.4/fpm/php-fpm.conf
 
 CMD ["bash", "script.sh"]

@@ -58,6 +58,5 @@ volumes:
             device: /home/mmoumani/data/wordpress/
 
 networks:
-  inception-network:
-    name: inception-network
-    driver: bridge
+    inception-network:
+        name: inception-network
