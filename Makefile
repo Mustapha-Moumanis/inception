@@ -1,20 +1,25 @@
+YML = srcs/docker-compose.yml
+
 up:
-	cd srcs; docker-compose up --build
+   docker-compose -f $(YML) up --build
 
 build:
-	cd srcs; docker-compose build
+   docker-compose -f $(YML) build
 
 down:
-	cd srcs; docker-compose down
+   docker-compose -f $(YML) down
 
-fclean: down
-	docker image rm $$(docker image ls -q);
+start:
+   docker-compose -f $(YML) start
 
-rm:
-	docker stop $$(docker ps -qa);
-	docker rm $$(docker ps -qa);
-	docker rmi $$(docker images -qa);
-	docker volume rm $$(docker volume ls -q);
-	docker network rm $$(docker network ls -q);
+stop:
+   docker-compose -f $(YML) stop
 
-re: down up
+restart:
+   docker-compose -f $(YML) restart
+
+logs:
+   docker-compose -f $(YML) logs
+
+ps:
+   docker-compose -f $(YML) ps
